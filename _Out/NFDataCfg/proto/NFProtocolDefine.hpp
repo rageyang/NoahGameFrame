@@ -349,8 +349,8 @@ public:
 	static const std::string& GuildMoney(){ static std::string xGuildMoney = "GuildMoney"; return xGuildMoney; } // int
 	static const std::string& GuildLevel(){ static std::string xGuildLevel = "GuildLevel"; return xGuildLevel; } // int
 	static const std::string& GuildContinueDay(){ static std::string xGuildContinueDay = "GuildContinueDay"; return xGuildContinueDay; } // int
-	static const std::string& GuilID(){ static std::string xGuilID = "GuilID"; return xGuilID; } // object
-	static const std::string& GuilIDIcon(){ static std::string xGuilIDIcon = "GuilIDIcon"; return xGuilIDIcon; } // int
+	static const std::string& GuildID(){ static std::string xGuildID = "GuildID"; return xGuildID; } // object
+	static const std::string& GuildIcon(){ static std::string xGuildIcon = "GuildIcon"; return xGuildIcon; } // int
 	static const std::string& GuildMemeberCount(){ static std::string xGuildMemeberCount = "GuildMemeberCount"; return xGuildMemeberCount; } // int
 	static const std::string& GuildMemeberMaxCount(){ static std::string xGuildMemeberMaxCount = "GuildMemeberMaxCount"; return xGuildMemeberMaxCount; } // int
 	static const std::string& GuildHonor(){ static std::string xGuildHonor = "GuildHonor"; return xGuildHonor; } // int
@@ -619,6 +619,7 @@ public:
 	static const std::string& SalePrice(){ static std::string xSalePrice = "SalePrice"; return xSalePrice; } // int
 	static const std::string& Script(){ static std::string xScript = "Script"; return xScript; } // string
 	static const std::string& Extend(){ static std::string xExtend = "Extend"; return xExtend; } // string
+	static const std::string& SpriteFile(){ static std::string xSpriteFile = "SpriteFile"; return xSpriteFile; } // string
 	static const std::string& Icon(){ static std::string xIcon = "Icon"; return xIcon; } // string
 	static const std::string& ShowName(){ static std::string xShowName = "ShowName"; return xShowName; } // string
 	static const std::string& HeroTye(){ static std::string xHeroTye = "HeroTye"; return xHeroTye; } // int
@@ -745,6 +746,7 @@ public:
 	static const std::string& LastAttacker(){ static std::string xLastAttacker = "LastAttacker"; return xLastAttacker; } // object
 	static const std::string& ShowName(){ static std::string xShowName = "ShowName"; return xShowName; } // string
 	static const std::string& EquipIDRef(){ static std::string xEquipIDRef = "EquipIDRef"; return xEquipIDRef; } // string
+	static const std::string& SpriteFile(){ static std::string xSpriteFile = "SpriteFile"; return xSpriteFile; } // string
 	static const std::string& Icon(){ static std::string xIcon = "Icon"; return xIcon; } // string
 	static const std::string& ShowCard(){ static std::string xShowCard = "ShowCard"; return xShowCard; } // string
 	static const std::string& HeroType(){ static std::string xHeroType = "HeroType"; return xHeroType; } // int
@@ -803,7 +805,7 @@ public:
 	static const std::string& Sex(){ static std::string xSex = "Sex"; return xSex; } // int
 	static const std::string& Race(){ static std::string xRace = "Race"; return xRace; } // int
 	static const std::string& Camp(){ static std::string xCamp = "Camp"; return xCamp; } // int
-	static const std::string& LastContainerID(){ static std::string xLastContainerID = "LastContainerID"; return xLastContainerID; } // int
+	static const std::string& HomeSceneID(){ static std::string xHomeSceneID = "HomeSceneID"; return xHomeSceneID; } // int
 	static const std::string& Level(){ static std::string xLevel = "Level"; return xLevel; } // int
 	static const std::string& ShowName(){ static std::string xShowName = "ShowName"; return xShowName; } // string
 	static const std::string& PrefabPath(){ static std::string xPrefabPath = "PrefabPath"; return xPrefabPath; } // string
@@ -834,6 +836,10 @@ public:
 	static const std::string& GateID(){ static std::string xGateID = "GateID"; return xGateID; } // int
 	static const std::string& GuildID(){ static std::string xGuildID = "GuildID"; return xGuildID; } // object
 	static const std::string& TeamID(){ static std::string xTeamID = "TeamID"; return xTeamID; } // object
+	static const std::string& ViewOppnent(){ static std::string xViewOppnent = "ViewOppnent"; return xViewOppnent; } // object
+	static const std::string& FightOppnent(){ static std::string xFightOppnent = "FightOppnent"; return xFightOppnent; } // object
+	static const std::string& GambleGold(){ static std::string xGambleGold = "GambleGold"; return xGambleGold; } // int
+	static const std::string& GambleDiamond(){ static std::string xGambleDiamond = "GambleDiamond"; return xGambleDiamond; } // int
 	static const std::string& SUCKBLOOD(){ static std::string xSUCKBLOOD = "SUCKBLOOD"; return xSUCKBLOOD; } // int
 	static const std::string& REFLECTDAMAGE(){ static std::string xREFLECTDAMAGE = "REFLECTDAMAGE"; return xREFLECTDAMAGE; } // int
 	static const std::string& CRITICAL(){ static std::string xCRITICAL = "CRITICAL"; return xCRITICAL; } // int
@@ -1083,6 +1089,7 @@ public:
 	static const std::string& RelivePos(){ static std::string xRelivePos = "RelivePos"; return xRelivePos; } // string
 	static const std::string& Width(){ static std::string xWidth = "Width"; return xWidth; } // int
 	static const std::string& SoundList(){ static std::string xSoundList = "SoundList"; return xSoundList; } // string
+	static const std::string& Tile(){ static std::string xTile = "Tile"; return xTile; } // int
 	static const std::string& Share(){ static std::string xShare = "Share"; return xShare; } // int
 	static const std::string& CanClone(){ static std::string xCanClone = "CanClone"; return xCanClone; } // int
 	static const std::string& ActorID(){ static std::string xActorID = "ActorID"; return xActorID; } // int
@@ -1143,6 +1150,7 @@ public:
 	static const std::string& Stone(){ static std::string xStone = "Stone"; return xStone; } // int
 	static const std::string& Diamond(){ static std::string xDiamond = "Diamond"; return xDiamond; } // int
 	static const std::string& Level(){ static std::string xLevel = "Level"; return xLevel; } // int
+	static const std::string& Count(){ static std::string xCount = "Count"; return xCount; } // int
 	// Record
 
 };
@@ -1410,4 +1418,4 @@ public:
 
 } // !@NFrame
 
-#endif // !NF_PR_NAME_HPP 
+#endif // !NF_PR_NAME_HPP

@@ -6,7 +6,6 @@
 //    Row,Col; ; ; ; ; ; ;
 // -------------------------------------------------------------------------
 
-//#include "stdafx.h"
 #include <algorithm>
 #include "NFCNoSqlModule.h"
 #include "NFComm/NFMessageDefine/NFProtocolDefine.hpp"
@@ -43,10 +42,11 @@ bool NFCNoSqlModule::AfterInit()
 	NF_SHARE_PTR<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::NoSqlServer::ThisName());
 	if (xLogicClass)
 	{
-		NFList<std::string>& strIdList = xLogicClass->GetIdList();
-		std::string strId;
-		for (bool bRet = strIdList.First(strId); bRet; bRet = strIdList.Next(strId))
+		const std::vector<std::string>& strIdList = xLogicClass->GetIDList();
+		for (int i = 0; i < strIdList.size(); ++i)
 		{
+			const std::string& strId = strIdList[i];
+
 			const int nServerID = m_pElementModule->GetPropertyInt(strId, NFrame::NoSqlServer::ServerID());
 			const int nPort = m_pElementModule->GetPropertyInt(strId, NFrame::NoSqlServer::Port());
 			const std::string& strIP = m_pElementModule->GetPropertyString(strId, NFrame::NoSqlServer::IP());
@@ -55,18 +55,19 @@ bool NFCNoSqlModule::AfterInit()
 			if (this->AddConnectSql(strId, strIP, nPort, strAuth))
 			{
 				std::ostringstream strLog;
-				strLog << "Connected NoSqlServer[" << strIP << "], Port = " << nPort;
+				strLog << "Connected NoSqlServer[" << strIP << "], Port = [" << nPort << "], Passsword = [" << strAuth << "]";
 				m_pLogModule->LogNormal(NFILogModule::NF_LOG_LEVEL::NLL_INFO_NORMAL, NULL_OBJECT, strLog, __FUNCTION__, __LINE__);
 
 			}
 			else
 			{
 				std::ostringstream strLog;
-				strLog << "Cannot connect NoSqlServer[" << strIP << "], Port = " << nPort;
+				strLog << "Cannot connect NoSqlServer[" << strIP << "], Port = " << nPort << "], Passsword = [" << strAuth << "]";
 				m_pLogModule->LogNormal(NFILogModule::NLL_ERROR_NORMAL, NULL_OBJECT, strLog, __FUNCTION__, __LINE__);
 			}
 		}
 	}
+
 	return true;
 }
 
@@ -160,8 +161,7 @@ bool NFCNoSqlModule::AddConnectSql(const std::string& strID, const std::string& 
 	if (!mxNoSqlDriver.ExistElement(strID))
 	{
 		NF_SHARE_PTR<NFINoSqlDriver> pNoSqlDriver(new NFCNoSqlDriver());
-		pNoSqlDriver->Connect(strIP, nPort, strPass);
-		if (pNoSqlDriver->Enable())
+		if (pNoSqlDriver->Connect(strIP, nPort, strPass))
 		{
 			mxNoSqlDriver.AddElement(strID, pNoSqlDriver);
 			return true;

@@ -322,8 +322,8 @@ public class Guild {
 	public static final String GuildMoney = "GuildMoney"; // int
 	public static final String GuildLevel = "GuildLevel"; // int
 	public static final String GuildContinueDay = "GuildContinueDay"; // int
-	public static final String GuilID = "GuilID"; // object
-	public static final String GuilIDIcon = "GuilIDIcon"; // int
+	public static final String GuildID = "GuildID"; // object
+	public static final String GuildIcon = "GuildIcon"; // int
 	public static final String GuildMemeberCount = "GuildMemeberCount"; // int
 	public static final String GuildMemeberMaxCount = "GuildMemeberMaxCount"; // int
 	public static final String GuildHonor = "GuildHonor"; // int
@@ -580,6 +580,7 @@ public class Item {
 	public static final String SalePrice = "SalePrice"; // int
 	public static final String Script = "Script"; // string
 	public static final String Extend = "Extend"; // string
+	public static final String SpriteFile = "SpriteFile"; // string
 	public static final String Icon = "Icon"; // string
 	public static final String ShowName = "ShowName"; // string
 	public static final String HeroTye = "HeroTye"; // int
@@ -698,6 +699,7 @@ public class NPC {
 	public static final String LastAttacker = "LastAttacker"; // object
 	public static final String ShowName = "ShowName"; // string
 	public static final String EquipIDRef = "EquipIDRef"; // string
+	public static final String SpriteFile = "SpriteFile"; // string
 	public static final String Icon = "Icon"; // string
 	public static final String ShowCard = "ShowCard"; // string
 	public static final String HeroType = "HeroType"; // int
@@ -754,7 +756,7 @@ public class Player {
 	public static final String Sex = "Sex"; // int
 	public static final String Race = "Race"; // int
 	public static final String Camp = "Camp"; // int
-	public static final String LastContainerID = "LastContainerID"; // int
+	public static final String HomeSceneID = "HomeSceneID"; // int
 	public static final String Level = "Level"; // int
 	public static final String ShowName = "ShowName"; // string
 	public static final String PrefabPath = "PrefabPath"; // string
@@ -785,6 +787,10 @@ public class Player {
 	public static final String GateID = "GateID"; // int
 	public static final String GuildID = "GuildID"; // object
 	public static final String TeamID = "TeamID"; // object
+	public static final String ViewOppnent = "ViewOppnent"; // object
+	public static final String FightOppnent = "FightOppnent"; // object
+	public static final String GambleGold = "GambleGold"; // int
+	public static final String GambleDiamond = "GambleDiamond"; // int
 	public static final String SUCKBLOOD = "SUCKBLOOD"; // int
 	public static final String REFLECTDAMAGE = "REFLECTDAMAGE"; // int
 	public static final String CRITICAL = "CRITICAL"; // int
@@ -1032,6 +1038,7 @@ public class Scene {
 	public static final String RelivePos = "RelivePos"; // string
 	public static final String Width = "Width"; // int
 	public static final String SoundList = "SoundList"; // string
+	public static final String Tile = "Tile"; // int
 	public static final String Share = "Share"; // int
 	public static final String CanClone = "CanClone"; // int
 	public static final String ActorID = "ActorID"; // int
@@ -1088,6 +1095,7 @@ public class Shop {
 	public static final String Stone = "Stone"; // int
 	public static final String Diamond = "Diamond"; // int
 	public static final String Level = "Level"; // int
+	public static final String Count = "Count"; // int
 	// Record
 
 }

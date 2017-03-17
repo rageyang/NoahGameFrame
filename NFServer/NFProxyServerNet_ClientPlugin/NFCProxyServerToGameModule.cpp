@@ -13,9 +13,7 @@
 
 bool NFCProxyServerToGameModule::Init()
 {
-	m_pNetClientModule = NF_NEW NFINetClientModule(pPluginManager);
-
-	m_pNetClientModule->Init();
+	m_pNetClientModule = pPluginManager->FindModule<NFINetClientModule>();
 
     return true;
 }
@@ -29,8 +27,6 @@ bool NFCProxyServerToGameModule::Shut()
 
 bool NFCProxyServerToGameModule::Execute()
 {
-	m_pNetClientModule->Execute();
-
 	return true;
 }
 
@@ -42,18 +38,20 @@ bool NFCProxyServerToGameModule::AfterInit()
     m_pLogModule = pPluginManager->FindModule<NFILogModule>();
     m_pClassModule = pPluginManager->FindModule<NFIClassModule>();
 
-	m_pNetClientModule->AddReceiveCallBack(NFMsg::EGMI_ACK_ENTER_GAME, this, &NFCProxyServerToGameModule::OnAckEnterGame);
-	m_pNetClientModule->AddReceiveCallBack(this, &NFCProxyServerToGameModule::Transpond);
+	m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_GAME, NFMsg::EGMI_ACK_ENTER_GAME, this, &NFCProxyServerToGameModule::OnAckEnterGame);
+	m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_GAME, this, &NFCProxyServerToGameModule::Transpond);
 
-	m_pNetClientModule->AddEventCallBack(this, &NFCProxyServerToGameModule::OnSocketGSEvent);
+	m_pNetClientModule->AddEventCallBack(NF_SERVER_TYPES::NF_ST_GAME, this, &NFCProxyServerToGameModule::OnSocketGSEvent);
+	m_pNetClientModule->ExpandBufferSize();
 
     NF_SHARE_PTR<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::Server::ThisName());
     if (xLogicClass)
     {
-        NFList<std::string>& strIdList = xLogicClass->GetIdList();
-        std::string strId;
-        for (bool bRet = strIdList.First(strId); bRet; bRet = strIdList.Next(strId))
-        {
+		const std::vector<std::string>& strIdList = xLogicClass->GetIDList();
+		for (int i = 0; i < strIdList.size(); ++i)
+		{
+			const std::string& strId = strIdList[i];
+
             const int nServerType = m_pElementModule->GetPropertyInt(strId, NFrame::Server::Type());
             const int nServerID = m_pElementModule->GetPropertyInt(strId, NFrame::Server::ServerID());
             if (nServerType == NF_SERVER_TYPES::NF_ST_GAME)
@@ -78,11 +76,6 @@ bool NFCProxyServerToGameModule::AfterInit()
     }
 
     return true;
-}
-
-NFINetClientModule* NFCProxyServerToGameModule::GetClusterModule()
-{
-	return m_pNetClientModule;
 }
 
 void NFCProxyServerToGameModule::AddServerInfoExt(const std::string & key, const std::string & value)
@@ -113,10 +106,11 @@ void NFCProxyServerToGameModule::Register(NFINet* pNet)
     NF_SHARE_PTR<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::Server::ThisName());
     if (xLogicClass)
     {
-        NFList<std::string>& strIdList = xLogicClass->GetIdList();
-        std::string strId;
-        for (bool bRet = strIdList.First(strId); bRet; bRet = strIdList.Next(strId))
-        {
+		const std::vector<std::string>& strIdList = xLogicClass->GetIDList();
+		for (int i = 0; i < strIdList.size(); ++i)
+		{
+			const std::string& strId = strIdList[i];
+
             const int nServerType = m_pElementModule->GetPropertyInt(strId, NFrame::Server::Type());
             const int nServerID = m_pElementModule->GetPropertyInt(strId, NFrame::Server::ServerID());
             if (nServerType == NF_SERVER_TYPES::NF_ST_PROXY && pPluginManager->GetAppID() == nServerID)
@@ -162,14 +156,12 @@ void NFCProxyServerToGameModule::OnAckEnterGame(const int nSockIndex, const int 
     {
         return;
     }
+ 
+	const NFGUID& xClient = NFINetModule::PBToNF(xData.event_client());
+	const NFGUID& xPlayer = NFINetModule::PBToNF(xData.event_object());
 
-    if (xData.event_code() == NFMsg::EGEC_ENTER_GAME_SUCCESS)
-    {
-        const NFGUID& xClient = NFINetModule::PBToNF(xData.event_client());
-        const NFGUID& xPlayer = NFINetModule::PBToNF(xData.event_object());
-
-        m_pProxyServerNet_ServerModule->EnterGameSuccessEvent(xClient, xPlayer);
-    }
+	m_pProxyServerNet_ServerModule->EnterGameSuccessEvent(xClient, xPlayer);
+	m_pProxyServerNet_ServerModule->Transpond(nSockIndex, nMsgID, msg, nLen);
 }
 
 void NFCProxyServerToGameModule::LogServerInfo(const std::string& strServerInfo)

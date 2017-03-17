@@ -66,6 +66,7 @@ public:
 			bool bRet = pModule->Awake();
 			if (!bRet)
 			{
+				std::cout << pModule->strName << std::endl;
 				assert(0);
 			}
 
@@ -82,6 +83,7 @@ public:
             bool bRet = pModule->Init();
             if (!bRet)
             {
+				std::cout << pModule->strName << std::endl;
                 assert(0);
             }
 
@@ -98,6 +100,7 @@ public:
             bool bRet = pModule->AfterInit();
             if (!bRet)
             {
+				std::cout << pModule ->strName << std::endl;
                 assert(0);
             }
 

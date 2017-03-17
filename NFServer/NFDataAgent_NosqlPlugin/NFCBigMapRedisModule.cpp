@@ -120,15 +120,13 @@ bool NFCBigMapRedisModule::GetGridBaseInfo(const std::vector<std::string>& strGr
 bool NFCBigMapRedisModule::GetGridBaseInfo(std::vector<NFMsg::BigMapGridBaseInfo>& xBaseInfo)
 {
  	NF_SHARE_PTR<NFIClass> xLogicClass = m_pLogicClassModule->GetElement(NFrame::Map::ThisName());
- 	NFList<std::string>& xElementList = xLogicClass->GetIdList();
- 	
- 	std::vector<std::string> vFields;
- 	std::string strID;
- 	for (xElementList.First(strID); !strID.empty(); xElementList.Next(strID))
- 	{
- 		vFields.push_back(strID);
- 	
- 		strID.clear();
+	const std::vector<std::string>& strIdList = xLogicClass->GetIDList();
+	std::vector<std::string> vFields; 
+	for (int i = 0; i < strIdList.size(); ++i)
+	{
+		const std::string& strId = strIdList[i];
+
+		vFields.push_back(strId);
  	}
 
 	return GetGridBaseInfo(vFields, xBaseInfo);
@@ -200,27 +198,21 @@ bool NFCBigMapRedisModule::GetGridStationInfo(const std::string& strGridID, std:
 			std::vector<std::pair<std::string, double> > memberScoreList;
 			if (pNoSqlDriver->ZRevRange(strKey, 0, nCount, memberScoreList))
 			{
-				std::vector<std::string> xGuildIDList;
 				std::vector<std::pair<std::string, double> >::iterator it = memberScoreList.begin();
 				for (it; it != memberScoreList.end(); it++)
 				{
-					xGuildIDList.push_back(it->first);					
-				}
-
-				/////////////all guild info
-				std::vector<NF_SHARE_PTR<NFIPropertyManager>> xPropertyManagerList;
-				if (m_pGuildRedisModule->GetGuildCachePropertyInfo(xGuildIDList, xPropertyManagerList))
-				{
-					for (int i = 0; i < xPropertyManagerList.size(); ++i)
+					std::string strGuildID = it->first;
+					NFGUID xGuildID;
+					if (xGuildID.FromString(strGuildID))
 					{
-						NF_SHARE_PTR<NFIPropertyManager> xPropertyManager = xPropertyManagerList[i];
+						NF_SHARE_PTR<NFIPropertyManager> xPropertyManager = m_pGuildRedisModule->GetGuildCachePropertyInfo(xGuildID);
 						if (xPropertyManager)
 						{
-							NFGUID xGuildID = xPropertyManager->GetPropertyObject(NFrame::Guild::GuilID());
+							NFGUID xGuildID = xPropertyManager->GetPropertyObject(NFrame::Guild::GuildID());
 							const int nLevel = xPropertyManager->GetPropertyInt(NFrame::Guild::GuildLevel());
 							const int nCount = xPropertyManager->GetPropertyInt(NFrame::Guild::GuildMemeberCount());
 							const int nResource = xPropertyManager->GetPropertyInt(NFrame::Guild::KingWarResource());
-							const std::string& strIcon = xPropertyManager->GetPropertyString(NFrame::Guild::GuilIDIcon());
+							const std::string& strIcon = xPropertyManager->GetPropertyString(NFrame::Guild::GuildIcon());
 
 							NFMsg::GridGuildBaseInfo xGridGuildBaseInfo;
 							xGridGuildBaseInfo.mutable_id()->CopyFrom(NFINetModule::NFToPB(xGuildID));
@@ -232,8 +224,6 @@ bool NFCBigMapRedisModule::GetGridStationInfo(const std::string& strGridID, std:
 							xWarHistoryList.push_back(xGridGuildBaseInfo);
 						}
 					}
-
-					return true;
 				}
 			}
 		}

@@ -21,18 +21,15 @@ public:
 
 	virtual bool GetPlayerCacheGameID(const std::vector<std::string>& xList, std::vector<int64_t>& xResultList) = 0;
 	virtual bool GetPlayerCacheProxyID(const std::vector<std::string>& xList, std::vector<int64_t>& xResultList) = 0;
+	virtual int GetPlayerHomeSceneID(const NFGUID& self) = 0;
 
-	virtual NF_SHARE_PTR<NFIPropertyManager> GetPlayerCacheProperty(const NFGUID& self) = 0;
-	virtual NF_SHARE_PTR<NFIRecordManager> GetPlayerCacheRecord(const NFGUID& self) = 0;
+	virtual bool LoadPlayerData(const NFGUID& self) = 0;
+	virtual bool SavePlayerData(const NFGUID& self) = 0;
+	virtual bool SavePlayerTile(const int nSceneID, const NFGUID& self, const std::string& strTileData) = 0;
 
-	virtual bool SetPlayerCacheProperty(const NFGUID& self, NF_SHARE_PTR<NFIPropertyManager> pPropertyManager) = 0;
-	virtual bool SetPlayerCacheRecord(const NFGUID& self, NF_SHARE_PTR<NFIRecordManager> pRecordManager) = 0;
-
-	virtual	bool GetAccountRoleID(const std::string& strAccount, NFGUID& xPlayerID) = 0;
-	virtual bool SavePlayerDataToCatch(const NFGUID& self) = 0;
-
-	virtual const NFGUID CreateRole(const std::string& strAccount, const std::string& strName) = 0;
-	virtual const bool DeleteRole(const std::string& strAccount, const NFGUID xID) = 0;
+	virtual bool LoadPlayerTile(const int nSceneID, const NFGUID& self, std::string& strTileData) = 0;
+	virtual bool LoadPlayerTileRandom(const int nSceneID, NFGUID& xPlayer, std::string& strTileData) = 0;
+	virtual bool LoadPlayerTileRandomCache(const NFGUID& xPlayer, std::string& strTileData) = 0;
 };
 
 #endif

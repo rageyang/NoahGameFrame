@@ -16,7 +16,7 @@
 #include "NFComm/NFPluginModule/NFIScheduleModule.h"
 #include "NFComm/NFPluginModule/NFIEventModule.h"
 #include "NFComm/NFPluginModule/NFIKernelModule.h"
-#include "NFComm/NFPluginModule/NFINetClientModule.hpp"
+#include "NFComm/NFPluginModule/NFINetClientModule.h"
 
 NFIClassModule *g_pClassModule = NULL;
 NFIElementModule *g_pElementModule = NULL;
@@ -70,7 +70,7 @@ bool NFCLogicBase::AfterInit()
 }
 
 
-bool NFCLogicBase::DoEvent(const int nEventID, const NFIDataList & valueList)
+bool NFCLogicBase::DoEvent(const int nEventID, const NFDataList & valueList)
 {
 	bool bRet = false;
 	auto moduleEventInfoMapEx = mModuleEventInfoMapEx;
@@ -97,10 +97,6 @@ bool NFCLogicBase::DoEvent(const int nEventID, const NFIDataList & valueList)
 bool NFCLogicBase::RemoveEventCallBack(const int nEventID, void *pTarget)
 {
 	bool bRet = false;
-	auto itTarFun = mModuleEventPrtMap.find(pTarget);
-	if(itTarFun == mModuleEventPrtMap.end())
-		return false;
-
 	NF_SHARE_PTR<NFList<MODULE_EVENT_FUNCTOR_PTR>> xEventListPtr = mModuleEventInfoMapEx.GetElement(nEventID);
 	if (xEventListPtr)
 	{
@@ -110,7 +106,9 @@ bool NFCLogicBase::RemoveEventCallBack(const int nEventID, void *pTarget)
 		{
 			MODULE_EVENT_FUNCTOR* pFunc = pFunPtr.get();
 			
-			if(itTarFun->second == pFunc)
+			auto itTarFun = mModuleEventPrtMap.find(pFunc);
+			
+			if(itTarFun->second == pTarget)
 			{
 				xEventListPtr->Remove(pFunPtr);
 				mModuleEventPrtMap.erase(itTarFun);

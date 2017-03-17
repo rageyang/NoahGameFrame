@@ -60,7 +60,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN;_DEBUG;_WINDOWS;_USRDLL;ELPP_NO_DEFAULT_LOG_FILE</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\Dependencies\;$(SolutionDir)\Dependencies\libevent\;$(SolutionDir)\Dependencies\libevent\WIN32-Code\;$(SolutionDir)\Dependencies\libevent\include\;$(SolutionDir)\Dependencies\libevent\compat\;$(SolutionDir)\Dependencies\protobuf\src\;$(SolutionDir)\Dependencies\Theron\Include\</AdditionalIncludeDirectories>
-      <BrowseInformation>true</BrowseInformation>
+      <BrowseInformation>false</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,6 +103,7 @@
   <ItemGroup>
     <ClInclude Include="NFCGameServerModule.h" />
     <ClInclude Include="NFCLevelModule.h" />
+    <ClInclude Include="NFCNPCRefreshModule.h" />
     <ClInclude Include="NFCPropertyConfigModule.h" />
     <ClInclude Include="NFCPropertyModule.h" />
     <ClInclude Include="NFCPropertyTrailModule.h" />
@@ -120,6 +121,7 @@
     </ClCompile>
     <ClCompile Include="NFCGameServerModule.cpp" />
     <ClCompile Include="NFCLevelModule.cpp" />
+    <ClCompile Include="NFCNPCRefreshModule.cpp" />
     <ClCompile Include="NFCPropertyConfigModule.cpp" />
     <ClCompile Include="NFCPropertyModule.cpp" />
     <ClCompile Include="NFCPropertyTrailModule.cpp" />

@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include "NFIModule.h"
-#include "NFComm/NFCore/NFIDataList.h"
+#include "NFComm/NFCore/NFDataList.hpp"
 #include "NFComm/NFCore/NFIPropertyManager.h"
 #include "NFComm/NFCore/NFIRecordManager.h"
 #include "NFComm/NFCore/NFIComponentManager.h"
@@ -37,8 +37,9 @@ public:
     virtual NFINT64 GetPropertyInt(const std::string& strConfigName, const std::string& strPropertyName) = 0;
     virtual double GetPropertyFloat(const std::string& strConfigName, const std::string& strPropertyName) = 0;
     virtual const std::string& GetPropertyString(const std::string& strConfigName, const std::string& strPropertyName) = 0;
+	
+	virtual const std::vector<std::string> GetListByProperty(const std::string& strClassName, const std::string& strPropertyName, const int nValue) = 0;
+	virtual const std::vector<std::string> GetListByProperty(const std::string& strClassName, const std::string& strPropertyName, const std::string& nValue) = 0;
 
-protected:
-private:
 };
 #endif

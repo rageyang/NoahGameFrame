@@ -13,9 +13,12 @@
 
 bool NFCLoginToMasterModule::Init()
 {
-	m_pNetClientModule = NF_NEW NFINetClientModule(pPluginManager);
-
-	m_pNetClientModule->Init();
+	m_pNetClientModule = pPluginManager->FindModule<NFINetClientModule>();
+	m_pKernelModule = pPluginManager->FindModule<NFIKernelModule>();
+	m_pLogModule = pPluginManager->FindModule<NFILogModule>();
+	m_pClassModule = pPluginManager->FindModule<NFIClassModule>();
+	m_pElementModule = pPluginManager->FindModule<NFIElementModule>();
+	m_pLoginNet_ServerModule = pPluginManager->FindModule<NFILoginNet_ServerModule>();
 
     return true;
 }
@@ -27,46 +30,42 @@ bool NFCLoginToMasterModule::Shut()
 
 bool NFCLoginToMasterModule::AfterInit()
 {
-    m_pKernelModule = pPluginManager->FindModule<NFIKernelModule>();
-    m_pLoginLogicModule = pPluginManager->FindModule<NFILoginLogicModule>();
-    m_pLogModule = pPluginManager->FindModule<NFILogModule>();
-    m_pClassModule = pPluginManager->FindModule<NFIClassModule>();
-    m_pElementModule = pPluginManager->FindModule<NFIElementModule>();
-    m_pLoginNet_ServerModule = pPluginManager->FindModule<NFILoginNet_ServerModule>();
-
-	m_pNetClientModule->AddReceiveCallBack(NFMsg::EGMI_ACK_CONNECT_WORLD, this, &NFCLoginToMasterModule::OnSelectServerResultProcess);
-	m_pNetClientModule->AddReceiveCallBack(NFMsg::EGMI_STS_NET_INFO, this, &NFCLoginToMasterModule::OnWorldInfoProcess);
+	m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_MASTER, NFMsg::EGMI_ACK_CONNECT_WORLD, this, &NFCLoginToMasterModule::OnSelectServerResultProcess);
+	m_pNetClientModule->AddReceiveCallBack(NF_SERVER_TYPES::NF_ST_MASTER, NFMsg::EGMI_STS_NET_INFO, this, &NFCLoginToMasterModule::OnWorldInfoProcess);
 	
-	m_pNetClientModule->AddEventCallBack(this, &NFCLoginToMasterModule::OnSocketMSEvent);
+	m_pNetClientModule->AddEventCallBack(NF_SERVER_TYPES::NF_ST_MASTER, this, &NFCLoginToMasterModule::OnSocketMSEvent);
+
+	m_pNetClientModule->ExpandBufferSize();
 
     NF_SHARE_PTR<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::Server::ThisName());
     if (xLogicClass)
     {
-        NFList<std::string>& strIdList = xLogicClass->GetIdList();
-        std::string strId;
-        for (bool bRet = strIdList.First(strId); bRet; bRet = strIdList.Next(strId))
-        {
-            const int nServerType = m_pElementModule->GetPropertyInt(strId, NFrame::Server::Type());
-            const int nServerID = m_pElementModule->GetPropertyInt(strId, NFrame::Server::ServerID());
-            if (nServerType == NF_SERVER_TYPES::NF_ST_MASTER)
-            {
-                const int nPort = m_pElementModule->GetPropertyInt(strId, NFrame::Server::Port());
-                const int nMaxConnect = m_pElementModule->GetPropertyInt(strId, NFrame::Server::MaxOnline());
-                const int nCpus = m_pElementModule->GetPropertyInt(strId, NFrame::Server::CpuCount());
-                const std::string& strName = m_pElementModule->GetPropertyString(strId, NFrame::Server::Name());
-                const std::string& strIP = m_pElementModule->GetPropertyString(strId, NFrame::Server::IP());
+		const std::vector<std::string>& strIdList = xLogicClass->GetIDList();
+		for (int i = 0; i < strIdList.size(); ++i)
+		{
+			const std::string& strId = strIdList[i];
 
-                ConnectData xServerData;
+			const int nServerType = m_pElementModule->GetPropertyInt(strId, NFrame::Server::Type());
+			const int nServerID = m_pElementModule->GetPropertyInt(strId, NFrame::Server::ServerID());
+			if (nServerType == NF_SERVER_TYPES::NF_ST_MASTER)
+			{
+				const int nPort = m_pElementModule->GetPropertyInt(strId, NFrame::Server::Port());
+				const int nMaxConnect = m_pElementModule->GetPropertyInt(strId, NFrame::Server::MaxOnline());
+				const int nCpus = m_pElementModule->GetPropertyInt(strId, NFrame::Server::CpuCount());
+				const std::string& strName = m_pElementModule->GetPropertyString(strId, NFrame::Server::Name());
+				const std::string& strIP = m_pElementModule->GetPropertyString(strId, NFrame::Server::IP());
 
-                xServerData.nGameID = nServerID;
-                xServerData.eServerType = (NF_SERVER_TYPES)nServerType;
-                xServerData.strIP = strIP;
-                xServerData.nPort = nPort;
-                xServerData.strName = strName;
+				ConnectData xServerData;
+
+				xServerData.nGameID = nServerID;
+				xServerData.eServerType = (NF_SERVER_TYPES)nServerType;
+				xServerData.strIP = strIP;
+				xServerData.nPort = nPort;
+				xServerData.strName = strName;
 
 				m_pNetClientModule->AddServer(xServerData);
-            }
-        }
+			}
+		}
     }
 
 
@@ -82,7 +81,6 @@ bool NFCLoginToMasterModule::BeforeShut()
 
 bool NFCLoginToMasterModule::Execute()
 {
-    m_pNetClientModule->Execute();
 	ServerReport();
 	return true;
 }
@@ -92,10 +90,11 @@ void NFCLoginToMasterModule::Register(NFINet* pNet)
     NF_SHARE_PTR<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::Server::ThisName());
     if (xLogicClass)
     {
-        NFList<std::string>& strIdList = xLogicClass->GetIdList();
-        std::string strId;
-        for (bool bRet = strIdList.First(strId); bRet; bRet = strIdList.Next(strId))
-        {
+		const std::vector<std::string>& strIdList = xLogicClass->GetIDList();
+		for (int i = 0; i < strIdList.size(); ++i)
+		{
+			const std::string& strId = strIdList[i];
+
             const int nServerType = m_pElementModule->GetPropertyInt(strId, NFrame::Server::Type());
             const int nServerID = m_pElementModule->GetPropertyInt(strId, NFrame::Server::ServerID());
             if (nServerType == NF_SERVER_TYPES::NF_ST_LOGIN && pPluginManager->GetAppID() == nServerID)
@@ -143,10 +142,11 @@ void NFCLoginToMasterModule::ServerReport()
 	std::shared_ptr<NFIClass> xLogicClass = m_pClassModule->GetElement(NFrame::Server::ThisName());
 	if (xLogicClass)
 	{
-		NFList<std::string>& strIdList = xLogicClass->GetIdList();
-		std::string strId;
-		for (bool bRet = strIdList.First(strId); bRet; bRet = strIdList.Next(strId))
+		const std::vector<std::string>& strIdList = xLogicClass->GetIDList();
+		for (int i = 0; i < strIdList.size(); ++i)
 		{
+			const std::string& strId = strIdList[i];
+
 			const int nServerType = m_pElementModule->GetPropertyInt(strId, NFrame::Server::Type());
 			const int nServerID = m_pElementModule->GetPropertyInt(strId, NFrame::Server::ServerID());
 			if (pPluginManager->GetAppID() == nServerID)
@@ -174,7 +174,7 @@ void NFCLoginToMasterModule::ServerReport()
 				}
 				reqMsg.mutable_server_info_list_ext()->CopyFrom(pb_ServerInfoExt);
 
-				std::shared_ptr<ConnectData> pServerData = m_pNetClientModule->GetServerList().First();
+				std::shared_ptr<ConnectData> pServerData = m_pNetClientModule->GetServerNetInfo(NF_SERVER_TYPES::NF_ST_MASTER);
 				if (pServerData)
 				{
 					m_pNetClientModule->SendToServerByPB(pServerData->nGameID, NFMsg::EGMI_STS_SERVER_REPORT, reqMsg);

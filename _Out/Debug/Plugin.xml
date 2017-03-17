@@ -1,5 +1,6 @@
 <XML>
 	<GameServer>
+		<Plugin Name="NFNetPlugin" />
 		<Plugin Name="NFKernelPlugin" />
 		<Plugin Name="NFConfigPlugin" />
 		<Plugin Name="NFGameServerPlugin" />
@@ -10,9 +11,9 @@
 	</GameServer>
 
 	<LoginServer>
+		<Plugin Name="NFNetPlugin" />
 		<Plugin Name="NFKernelPlugin" />
 		<Plugin Name="NFConfigPlugin" />	
-		<Plugin Name="NFLoginLogicPlugin" />
 		<Plugin Name="NFLoginNet_ServerPlugin" />
 		<Plugin Name="NFLoginNet_ClientPlugin" />
 		<Plugin Name="NFLogPlugin" />
@@ -20,6 +21,7 @@
 	</LoginServer>
 
 	<MasterServer>
+		<Plugin Name="NFNetPlugin" />
 		<Plugin Name="NFKernelPlugin" />
 		<Plugin Name="NFConfigPlugin" />
 		<Plugin Name="NFMasterServerPlugin" />
@@ -30,6 +32,7 @@
 	</MasterServer>
 
 	<ProxyServer>
+		<Plugin Name="NFNetPlugin" />
 		<Plugin Name="NFKernelPlugin" />
 		<Plugin Name="NFConfigPlugin" />
 		<Plugin Name="NFProxyLogicPlugin" />
@@ -40,6 +43,7 @@
 	</ProxyServer>
 
 	<WorldServer>
+		<Plugin Name="NFNetPlugin" />
 		<Plugin Name="NFKernelPlugin" />
 		<Plugin Name="NFConfigPlugin" />
 		<Plugin Name="NFWorldNet_ClientPlugin" />
@@ -51,8 +55,11 @@
 	<TutorialServer>
 		<Plugin Name="NFKernelPlugin" />
 		<Plugin Name="NFConfigPlugin" />
-		<Plugin Name="NFLogPlugin" />	
-		<Plugin Name="Tutorial1" />	
+		<Plugin Name="NFCoroutinePlugin" />
+		
+		<Plugin Name="NFLogPlugin" />
+		<Plugin Name="NFActorPlugin" />
+		<Plugin Name="Tutorial5" />
     	<ConfigPath Name="../" />		
 	</TutorialServer>
 </XML>
